@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum WagerType {
+  DUEL
+  POOL
+}
+
+enum WagerStatus {
+  PENDING_ACCEPTANCE
+  ACCEPTED
+  FUNDING
+  FUNDED
+  PLAYING
+  SETTLING
+  SETTLED
+  CANCELLED
+  EXPIRED
+}
+
+model TelegramUser {
+  id             Int      @id @default(autoincrement())
+  telegramId     String   @unique
+  username       String?
+  firstName      String
+  lastName       String?
+  walletAddress  String?
+  initiaUsername String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  createdWagers Wager[]      @relation("WagerCreator")
+  wagerEntries  WagerEntry[]
+}
+
+model Wager {
+  id           Int         @id @default(autoincrement())
+  onChainId    Int?
+  type         WagerType
+  status       WagerStatus @default(PENDING_ACCEPTANCE)
+  description  String      @default("Stack Game")
+  entryFee     String
+  deadline     DateTime
+  maxPlayers   Int         @default(2)
+  creatorId    Int
+  creator      TelegramUser @relation("WagerCreator", fields: [creatorId], references: [id])
+  chatId       String
+  messageId    String?
+  gameSeed     String?
+  txHash       String?
+  settleTxHash String?
+  winnerId     Int?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  entries WagerEntry[]
+
+  @@index([chatId])
+  @@index([status])
+}
+
+model WagerEntry {
+  id            Int      @id @default(autoincrement())
+  wagerId       Int
+  wager         Wager    @relation(fields: [wagerId], references: [id])
+  userId        Int
+  user          TelegramUser @relation(fields: [userId], references: [id])
+  side          Int      @default(0)
+  depositTxHash String?
+  funded        Boolean  @default(false)
+  score         Int?
+  playTimeMs    Int?
+  playedAt      DateTime?
+  payout        String?
+  createdAt     DateTime @default(now())
+
+  @@unique([wagerId, userId])
+  @@index([wagerId])
+}

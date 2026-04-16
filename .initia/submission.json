@@ -1,0 +1,19 @@
+{
+  "project_name": "WeezWager",
+  "track": "Gaming",
+  "chain_id": "",
+  "description": "Telegram social wagering bot with on-chain settlement on Initia. Create 1v1 duels or group pools, deposit stakes via auto-signing, bridge funds cross-chain, and settle with .init usernames.",
+  "contracts": {
+    "AccessRegistry": "",
+    "FeeRouter": "",
+    "WeezEscrow": "",
+    "WeezWager": ""
+  },
+  "native_features": [
+    "auto-signing",
+    "interwoven-bridge",
+    "initia-usernames"
+  ],
+  "demo_video": "",
+  "repository": ""
+}

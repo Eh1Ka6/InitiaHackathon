@@ -1,0 +1,40 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+target/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Rust
+target/
+*.rs.bk
+
+# Move
+build/
+
+# Docker
+.docker/
+
+# Hardhat
+packages/contracts/artifacts/
+packages/contracts/cache/
+packages/contracts/typechain-types/
+
+# Prisma
+packages/backend/prisma/migrations/
+
+# Misc
+*.log
+deployed.json
+dist/
