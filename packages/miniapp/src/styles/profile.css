@@ -1,0 +1,860 @@
+.profile-page {
+    min-height: 100vh;
+    background-color: #ffffff;
+    padding: 67px 1rem 1.5rem;
+}
+
+.profile-container {
+    max-width: 393px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+/* ── Profile Card ── */
+/* Figma: Frame 1597882947 — 340x336, white, r:20.71 */
+.profile-card {
+    position: relative;
+    background: #ffffff;
+    border-radius: 21px;
+    overflow: hidden;
+}
+
+/* Figma: image 309 — 350x350, r:22.53 */
+.profile-card-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 23px;
+}
+
+.profile-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-card-image .avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #e879f9 0%, #7c3aed 30%, #3b82f6 60%, #06b6d4 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-card-image .avatar-placeholder svg {
+    width: 80px;
+    height: 80px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.profile-card-info {
+    padding: 12px 20px 16px;
+    text-align: center;
+}
+
+/* Figma: Frame 1597883140 — horizontal, gap:16 */
+.profile-card-name {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 0;
+}
+
+/* Figma: "Tiokay" — Sequel Sans 32px w305, #003e89 */
+.profile-card-name h2 {
+    font-family: var(--font-sequel-sans), sans-serif;
+    font-size: 32px;
+    font-weight: 305;
+    color: #003e89;
+    margin: 0;
+    line-height: 1;
+}
+
+/* Figma: "#51" — Sequel Sans 32px w320, #003e89 */
+.profile-card-name span {
+    font-family: var(--font-sequel-sans), sans-serif;
+    font-size: 32px;
+    font-weight: 320;
+    color: #003e89;
+    line-height: 1;
+}
+
+/* ── Wallet Address ── */
+/* Figma: Frame 1597882946 — 317x22, r:21, pad:0/24 */
+.wallet-address {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 24px;
+}
+
+/* Figma: "0x1456…" — Sequel Sans 16px w405, #003e89 */
+.wallet-address span {
+    font-family: var(--font-sequel-sans), sans-serif;
+    font-size: 16px;
+    font-weight: 405;
+    color: #003e89;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Figma: LinkBreak icon — 18x18, fill:#003e89 */
+.wallet-address button {
+    background: none;
+    border: none;
+    color: #003e89;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    width: 18px;
+    height: 18px;
+    transition: opacity 0.2s;
+}
+
+.wallet-address button:hover {
+    opacity: 0.7;
+}
+
+/* ── Balances Section ── */
+/* Figma: Frame 1597883147 — 343x207, vertical, gap:9 */
+.balances-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Figma: "Balances" header — pad:0/24, right-aligned in Figma */
+.balances-header {
+    padding: 0 24px;
+}
+
+/* Figma: "Balances" — Sequel Sans 24px w420, #003e89 */
+.balances-header h3 {
+    font-family: var(--font-sequel-sans), sans-serif;
+    font-size: 24px;
+    font-weight: 420;
+    color: #003e89;
+    margin: 0;
+    text-align: right;
+}
+
+/* Figma: Frame 1597883143 — horizontal, gap:-43 (overlapping cards) */
+.balances-cards {
+    display: flex;
+    position: relative;
+}
+
+.balances-cards .balance-card:last-child {
+    margin-left: -43px;
+}
+
+/* Figma: balance cards — 193x112, r:15, pad:8/16, gap:18.72 */
+.balance-card {
+    width: 193px;
+    flex-shrink: 0;
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 8px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+    position: relative;
+    border: 1.25px solid rgba(0, 62, 137, 0.08);
+}
+
+.balance-card:first-child {
+    z-index: 1;
+}
+
+.balance-card-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 32px;
+}
+
+.balance-card-label .currency-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.balance-card-label span {
+    font-family: var(--font-sequel-sans), sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #003e89;
+    opacity: 0.6;
+}
+
+/* Figma: "$4,598" — Sequel Sans ~32px w420, #003e89 */
+.balance-card-value {
+    font-family: var(--font-sequel-sans), sans-serif;
+    font-size: 32px;
+    font-weight: 420;
+    color: #003e89;
+    line-height: 1;
+}
+
+/* ── Action Buttons ── */
+/* Figma: Frame 1597883146 — 343x44, horizontal, gap:8 */
+.profile-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Figma: buttons — 168x44, r:17, Geist ~17px w700 */
+.profile-actions button {
+    flex: 1;
+    height: 44px;
+    border-radius: 17px;
+    font-family: 'Geist', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Figma: Withdraw — stroke:#003e89, text:#003e89 */
+.btn-withdraw {
+    background: transparent;
+    border: 1px solid #003e89;
+    color: #003e89;
+}
+
+.btn-withdraw:hover {
+    background: rgba(0, 62, 137, 0.04);
+}
+
+/* Figma: Deposit — filled bg (#003e89), text:#ffffff */
+.btn-deposit {
+    background: #003e89;
+    border: 1px solid #003e89;
+    color: #ffffff;
+}
+
+.btn-deposit:hover {
+    background: #002d66;
+}
+
+.btn-deposit:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* ── Deposit Section ── */
+.deposit-section {
+    margin-top: 12px;
+}
+
+/* Deposit Tabs */
+.deposit-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0;
+}
+
+.deposit-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border: none;
+    background: none;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.deposit-tab:hover {
+    color: #119baf;
+}
+
+.deposit-tab.active {
+    color: #119baf;
+    border-bottom: 2px solid #119baf;
+}
+
+/* Deposit Panels */
+.deposit-panel {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.deposit-panel-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 6px 0;
+}
+
+.deposit-panel-desc {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0 0 16px 0;
+}
+
+.deposit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.deposit-input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #f8fafc;
+    padding: 0 12px;
+    transition: border-color 0.2s;
+}
+
+.deposit-input-group:focus-within {
+    border-color: #119baf;
+}
+
+.deposit-input-prefix {
+    font-size: 16px;
+    font-weight: 600;
+    color: #94a3b8;
+    margin-right: 4px;
+}
+
+.deposit-input {
+    flex: 1;
+    border: none;
+    background: none;
+    padding: 12px 4px;
+    font-size: 16px;
+    color: #1e293b;
+    outline: none;
+}
+
+.deposit-input::placeholder {
+    color: #cbd5e1;
+}
+
+.deposit-submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #119baf, #713db0);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.deposit-submit-btn:hover {
+    opacity: 0.9;
+}
+
+.deposit-submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.deposit-feedback {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.deposit-feedback.success {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+}
+
+.deposit-feedback.error {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+/* Bitpace Payment Info */
+.bitpace-payment-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.bitpace-qr img {
+    width: 200px;
+    height: 200px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.bitpace-address {
+    width: 100%;
+}
+
+.bitpace-address label {
+    display: block;
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.bitpace-address-value {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.bitpace-address-value code {
+    flex: 1;
+    font-size: 12px;
+    color: #334155;
+    word-break: break-all;
+}
+
+.bitpace-address-value button {
+    border: none;
+    background: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.bitpace-address-value button:hover {
+    color: #119baf;
+}
+
+.bitpace-waiting {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.bitpace-waiting-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f59e0b;
+    animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.deposit-reset-btn {
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    color: #64748b;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.deposit-reset-btn:hover {
+    border-color: #119baf;
+    color: #119baf;
+}
+
+/* Swipelux wrapper */
+.deposit-section .swipelux-wrapper {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.deposit-section .swipelux-wrapper iframe {
+    border-radius: 16px !important;
+    width: 100% !important;
+    min-height: 600px;
+}
+
+/* ── My Tickets Section ── */
+/* Figma: Frame 1597883148 — 343x538, vertical, gap:9 */
+.tickets-section {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+/* Figma: "My Tickets" header — pad:0/24 */
+.tickets-header {
+    padding: 0 24px;
+}
+
+/* Figma: "My Tickets" — Sequel Sans 24px w420, #003e89 */
+.tickets-header h3 {
+    font-family: var(--font-sequel-sans), sans-serif;
+    font-size: 24px;
+    font-weight: 420;
+    color: #003e89;
+    margin: 0;
+}
+
+/* Figma: Card — r:26.35 */
+.ticket-stack {
+    position: relative;
+}
+
+.ticket-card {
+    background: #ffffff;
+    border-radius: 26px;
+    padding: 20px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.ticket-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.ticket-card-draw-title {
+    font-family: var(--font-sequel-sans), sans-serif;
+    font-size: 18px;
+    font-weight: 420;
+    color: #003e89;
+}
+
+.ticket-card-status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ticket-card-status.status-active {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+}
+
+.ticket-card-status.status-won {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+}
+
+.ticket-card-status.status-lost {
+    background: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
+}
+
+/* Figma: ticket info — horizontal, gap:48 */
+.ticket-card-body {
+    display: flex;
+    gap: 48px;
+    margin-bottom: 12px;
+}
+
+/* Figma: labels — Geist 14px w400, #119baf */
+.ticket-card-field label {
+    display: block;
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #119baf;
+    margin-bottom: 4px;
+}
+
+.ticket-card-field span {
+    font-family: var(--font-sequel-sans), sans-serif;
+    font-size: 16px;
+    font-weight: 420;
+    color: #003e89;
+}
+
+.ticket-card-number {
+    font-family: var(--font-sequel-sans), sans-serif;
+    font-size: 14px;
+    font-weight: 405;
+    color: rgba(0, 62, 137, 0.5);
+}
+
+/* Figma: prize — "$150" Sequel Sans ~70px w320 */
+.ticket-card-prize {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.ticket-card-prize-amount {
+    font-family: var(--font-sequel-sans), sans-serif;
+    font-size: 70px;
+    font-weight: 320;
+    color: #003e89;
+    line-height: 1;
+}
+
+/* Figma: "Current prize: …" — Geist 10px w400, #119baf */
+.ticket-card-prize-note {
+    font-family: 'Geist', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    color: #119baf;
+}
+
+/* Figma: BTC icon — 62x62, r:620 (circle) */
+.ticket-card-btc-icon {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.ticket-card-btc-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Figma: progress bar — 213x16, r:33, inner 163x5 white bg, fill 140x5 */
+.ticket-progress {
+    margin-top: 12px;
+    padding: 5px;
+    background: rgba(0, 62, 137, 0.04);
+    border-radius: 33px;
+    width: 213px;
+}
+
+.ticket-progress-bar {
+    width: 100%;
+    height: 5px;
+    background: #ffffff;
+    border-radius: 33px;
+    overflow: hidden;
+}
+
+.ticket-progress-fill {
+    height: 100%;
+    border-radius: 198px;
+    background: linear-gradient(90deg, #713db0, #11a5b9);
+}
+
+/* Figma: "Enter the draw" button — 321x52, r:20, pad:12/29, Geist 20px w700 */
+.ticket-card-enter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 52px;
+    border-radius: 20px;
+    background: #003e89;
+    border: none;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background 0.2s ease;
+    padding: 12px 29px;
+}
+
+.ticket-card-enter span {
+    font-family: 'Geist', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.ticket-card-enter:hover {
+    background: #002d66;
+}
+
+/* Free ticket link */
+.free-ticket-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(17, 155, 175, 0.08);
+    border: 1px solid rgba(17, 155, 175, 0.2);
+    border-radius: 8px;
+    color: #119baf;
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    padding: 6px 12px;
+    transition: all 0.2s ease;
+    margin-top: 8px;
+}
+
+.free-ticket-link:hover {
+    background: rgba(17, 155, 175, 0.12);
+    border-color: rgba(17, 155, 175, 0.3);
+}
+
+/* ── Achievements Section ── */
+.achievements-section {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.achievements-section h3 {
+    font-family: var(--font-sequel-sans), sans-serif;
+    font-size: 24px;
+    font-weight: 420;
+    color: #003e89;
+    margin: 0;
+    padding: 0 24px;
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.achievement-card {
+    background: #ffffff;
+    border: 1.25px solid rgba(0, 62, 137, 0.08);
+    border-radius: 15px;
+    padding: 16px;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.achievement-card:hover {
+    transform: translateY(-2px);
+}
+
+.achievement-card-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: white;
+}
+
+.achievement-card-title {
+    font-family: var(--font-sequel-sans), sans-serif;
+    font-weight: 420;
+    color: #003e89;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.achievement-card-desc {
+    font-family: 'Geist', sans-serif;
+    color: rgba(0, 62, 137, 0.5);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+/* ── Logout button ── */
+.btn-logout {
+    width: 100%;
+    height: 44px;
+    border-radius: 17px;
+    border: 1px solid #003e89;
+    background: transparent;
+    color: #003e89;
+    font-family: 'Geist', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+    background: rgba(0, 62, 137, 0.04);
+}
+
+/* ── Loading skeleton ── */
+.profile-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.skeleton-avatar {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 21px;
+    background: linear-gradient(110deg, #f0f4fa 30%, #e8eef6 50%, #f0f4fa 70%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+}
+
+.skeleton-line {
+    height: 20px;
+    border-radius: 6px;
+    background: linear-gradient(110deg, #f0f4fa 30%, #e8eef6 50%, #f0f4fa 70%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite;
+}
+
+.skeleton-line.w-48 { width: 200px; margin: 0 auto; }
+.skeleton-line.w-32 { width: 140px; margin: 0 auto; }
+
+@keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    .profile-page {
+        padding: 1rem 0.75rem;
+    }
+
+    .ticket-card-prize-amount {
+        font-size: 48px;
+    }
+
+    .free-ticket-link {
+        font-size: 0;
+        padding: 12px;
+    }
+
+    .free-ticket-link svg {
+        font-size: 1.4rem;
+    }
+}

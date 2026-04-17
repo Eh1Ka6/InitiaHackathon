@@ -9,8 +9,12 @@ const prisma = new PrismaClient();
 export async function submitScore(req: AuthRequest, res: Response) {
   try {
     const wagerId = parseInt(req.params.id);
-    const { score, playTimeMs } = req.body;
-    const telegramId = req.telegramId!;
+    const { score, playTimeMs, telegramId: bodyTgId } = req.body;
+    const telegramId = req.telegramId || bodyTgId;
+    if (!telegramId) {
+      res.status(400).json({ error: "Missing telegramId" });
+      return;
+    }
 
     // 1. Validate wager is PLAYING
     const wager = await prisma.wager.findUnique({

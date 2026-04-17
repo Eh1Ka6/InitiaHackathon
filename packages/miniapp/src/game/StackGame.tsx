@@ -38,15 +38,16 @@ interface StackGameProps {
   wagerAmount?: string;
   opponentScore?: number | null;
   disabled?: boolean;
+  autoStart?: boolean;
 }
 
-export default function StackGame({ gameSeed, onGameOver, wagerAmount, opponentScore, disabled }: StackGameProps) {
+export default function StackGame({ gameSeed, onGameOver, wagerAmount, opponentScore, disabled, autoStart }: StackGameProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameRef = useRef<any>(null);
   const rafRef = useRef<number>(0);
   const lockRef = useRef(false);
 
-  const [screen, setScreen] = useState<"start"|"playing"|"over">("start");
+  const [screen, setScreen] = useState<"start"|"playing"|"over">(autoStart ? "playing" : "start");
   const [score, setScore] = useState(0);
   const [combo, setCombo] = useState(0);
   const [showPerf, setShowPerf] = useState(false);
@@ -148,6 +149,15 @@ export default function StackGame({ gameSeed, onGameOver, wagerAmount, opponentS
   // Render loop
   useEffect(() => {
     if (screen!=="playing") return;
+
+    // Auto-initialize if game was autoStarted (no onTap to call newGame)
+    if (!gameRef.current) {
+      newGame();
+      setScore(0);
+      setCombo(0);
+      setShowPerf(false);
+    }
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d")!;
@@ -391,26 +401,26 @@ export default function StackGame({ gameSeed, onGameOver, wagerAmount, opponentS
       {wagerAmount && screen==="playing" && (
         <div style={{
           background:"rgba(255,77,109,0.15)", border:"1px solid rgba(255,77,109,0.3)",
-          borderRadius:12, padding:"4px 14px", marginBottom:6,
-          fontSize:10, color:"#FF4D6D", letterSpacing:2, fontWeight:700,
+          borderRadius:10, padding:"2px 10px", marginBottom:2,
+          fontSize:9, color:"#FF4D6D", letterSpacing:2, fontWeight:700,
         }}>💰 {wagerAmount} INIT AT STAKE</div>
       )}
 
-      {/* Score */}
-      <div style={{textAlign:"center", marginBottom:6}}>
+      {/* Score (compact) */}
+      <div style={{textAlign:"center", marginBottom:2}}>
         <div style={{
-          fontSize:60, fontWeight:900, color:"white", lineHeight:1,
-          textShadow:scoreGlow, transition:"text-shadow 0.4s", letterSpacing:-2,
+          fontSize:34, fontWeight:900, color:"white", lineHeight:1,
+          textShadow:scoreGlow, transition:"text-shadow 0.4s", letterSpacing:-1.5,
         }}>{score}</div>
         {opponentScore !== null && opponentScore !== undefined && (
-          <div style={{color:"rgba(255,255,255,0.35)", fontSize:10, letterSpacing:3, marginTop:3}}>
+          <div style={{color:"rgba(255,255,255,0.35)", fontSize:9, letterSpacing:3, marginTop:1}}>
             OPPONENT: {opponentScore}
           </div>
         )}
       </div>
 
       {/* Badges */}
-      <div style={{height:28, marginBottom:6, display:"flex", alignItems:"center", gap:10}}>
+      <div style={{height:20, marginBottom:4, display:"flex", alignItems:"center", gap:8}}>
         {showPerf && (
           <div style={{
             background:"linear-gradient(90deg,#FFD600,#FF8000)",
@@ -428,16 +438,23 @@ export default function StackGame({ gameSeed, onGameOver, wagerAmount, opponentS
         )}
       </div>
 
-      {/* Game canvas */}
+      {/* Game canvas — scales to fit viewport */}
       <div
         onPointerDown={onTap}
         style={{
           position:"relative", cursor:"pointer", touchAction:"none",
           borderRadius:22, overflow:"hidden",
           boxShadow:"0 0 0 1px rgba(255,255,255,0.07), 0 40px 100px rgba(0,0,0,0.8)",
+          width: "min(340px, calc(100vh - 160px) * 340 / 600, 100vw - 32px)",
+          aspectRatio: "340 / 600",
         }}
       >
-        <canvas ref={canvasRef} width={W} height={H} style={{display:"block"}}/>
+        <canvas
+          ref={canvasRef}
+          width={W}
+          height={H}
+          style={{ display: "block", width: "100%", height: "100%" }}
+        />
 
         {/* Start screen */}
         {screen==="start" && (

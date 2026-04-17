@@ -3,10 +3,9 @@ import { config } from "../config";
 
 export async function balanceCommand(ctx: CommandContext<Context>) {
   const keyboard = new InlineKeyboard()
-    .webApp("💰 Check Balance", `${config.MINIAPP_URL}?startapp=balance`);
+    .webApp("💰 Check Balance", `${config.MINIAPP_URL}?startapp=profile`);
 
-  await ctx.reply(
-    "Check your balance and manage your wallet in the app 👇",
-    { reply_markup: keyboard }
-  );
+  await ctx.reply("Your balance and deposit options are in the app 👇", {
+    reply_markup: keyboard,
+  });
 }

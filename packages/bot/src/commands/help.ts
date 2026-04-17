@@ -1,23 +1,24 @@
-import { CommandContext, Context } from "grammy";
+import { CommandContext, Context, InlineKeyboard } from "grammy";
+import { config } from "../config";
 
 export async function helpCommand(ctx: CommandContext<Context>) {
+  const keyboard = new InlineKeyboard()
+    .webApp("🎮 Open WeezWager", config.MINIAPP_URL);
+
   await ctx.reply(
-    `🎮 *WeezWager — Stack & Win*\n\n` +
-    `Challenge friends to Stack, wager crypto, winner takes all!\n\n` +
-    `*Commands:*\n` +
-    `/wager @user amount — Challenge someone\n` +
-    `/pool description 24h — Create a pool\n` +
-    `/status — View your wagers\n` +
-    `/status 42 — Check specific wager\n` +
-    `/cancel 42 — Cancel a wager\n` +
-    `/link — Connect your wallet\n` +
-    `/balance — Check your balance\n` +
-    `/help — Show this message\n\n` +
-    `*How it works:*\n` +
-    `1️⃣ Challenge a friend with /wager\n` +
-    `2️⃣ Both deposit stakes in the app\n` +
-    `3️⃣ Play the Stack game\n` +
-    `4️⃣ Higher score wins the pot!`,
-    { parse_mode: "Markdown" }
+    `🎮 *WeezWager — Win Different*\n\n` +
+      `Play the Stack game, buy a ticket, and win real crypto.\n\n` +
+      `*Commands:*\n` +
+      `/play — Open Cash Game\n` +
+      `/profile — Your profile & tickets\n` +
+      `/balance — Check your balance\n` +
+      `/help — Show this message\n\n` +
+      `*How it works:*\n` +
+      `1️⃣ Tap Open WeezWager\n` +
+      `2️⃣ Pick a prize draw ($10 / $50 / $500)\n` +
+      `3️⃣ Create profile or connect wallet\n` +
+      `4️⃣ Buy ticket & play Stack\n` +
+      `5️⃣ Higher scores win the pot!`,
+    { reply_markup: keyboard, parse_mode: "Markdown" }
   );
 }

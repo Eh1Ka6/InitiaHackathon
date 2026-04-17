@@ -17,9 +17,9 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
 export const api = {
   ensureUser(data: { telegramId: string; username?: string; firstName: string; lastName?: string }) {
-    return request<TelegramUser>("/auth/telegram", {
+    return request<TelegramUser>("/users", {
       method: "POST",
-      body: JSON.stringify({ initData: `user=${JSON.stringify({ id: data.telegramId, username: data.username, first_name: data.firstName, last_name: data.lastName })}&auth_date=${Math.floor(Date.now() / 1000)}&hash=bot-internal` }),
+      body: JSON.stringify(data),
     }).catch(() => null); // Non-critical
   },
 

@@ -3,21 +3,13 @@ import { config } from "./config";
 import { api } from "./services/api";
 
 // Commands
-import { wagerCommand } from "./commands/wager";
-import { poolCommand } from "./commands/pool";
-import { statusCommand } from "./commands/status";
-import { cancelCommand } from "./commands/cancel";
-import { linkCommand } from "./commands/link";
-import { balanceCommand } from "./commands/balance";
 import { helpCommand } from "./commands/help";
-
-// Callbacks
-import { acceptWagerCallback } from "./callbacks/acceptWager";
-import { joinPoolCallback } from "./callbacks/joinPool";
+import { playCommand } from "./commands/play";
+import { profileCommand } from "./commands/profile";
+import { balanceCommand } from "./commands/balance";
 
 export const bot = new Bot(config.BOT_TOKEN);
 
-// Error handler
 bot.catch((err) => {
   console.error("Bot error:", err);
 });
@@ -25,7 +17,7 @@ bot.catch((err) => {
 // User registration middleware
 bot.use(async (ctx, next) => {
   if (ctx.from) {
-    api.ensureUser({
+    await api.ensureUser({
       telegramId: ctx.from.id.toString(),
       username: ctx.from.username,
       firstName: ctx.from.first_name,
@@ -35,16 +27,9 @@ bot.use(async (ctx, next) => {
   await next();
 });
 
-// Commands
-bot.command("wager", wagerCommand);
-bot.command("pool", poolCommand);
-bot.command("status", statusCommand);
-bot.command("cancel", cancelCommand);
-bot.command("link", linkCommand);
-bot.command("balance", balanceCommand);
-bot.command("help", helpCommand);
+// Commands — draw-based flow
 bot.command("start", helpCommand);
-
-// Callbacks
-bot.callbackQuery(/^accept:\d+$/, acceptWagerCallback);
-bot.callbackQuery(/^join:\d+:[12]$/, joinPoolCallback);
+bot.command("help", helpCommand);
+bot.command("play", playCommand);
+bot.command("profile", profileCommand);
+bot.command("balance", balanceCommand);

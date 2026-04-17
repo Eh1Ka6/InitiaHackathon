@@ -5,7 +5,8 @@ export function useWager(id: number) {
   return useQuery({
     queryKey: ["wager", id],
     queryFn: () => api.getWager(id),
-    refetchInterval: 5000, // Poll every 5s for status updates
+    enabled: id > 0,
+    refetchInterval: 5000,
   });
 }
 

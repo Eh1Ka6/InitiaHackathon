@@ -3,7 +3,10 @@ const BASE = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 let authToken = "";
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    "Bypass-Tunnel-Reminder": "true",
+  };
   if (authToken) headers["Authorization"] = `Bearer ${authToken}`;
 
   const res = await fetch(`${BASE}${path}`, { headers, ...options });
@@ -34,10 +37,10 @@ export const api = {
     return request<any[]>(`/wagers/user/${telegramId}`);
   },
 
-  submitScore(wagerId: number, score: number, playTimeMs: number) {
+  submitScore(wagerId: number, score: number, playTimeMs: number, telegramId: string) {
     return request<any>(`/wagers/${wagerId}/score`, {
       method: "POST",
-      body: JSON.stringify({ score, playTimeMs }),
+      body: JSON.stringify({ score, playTimeMs, telegramId }),
     });
   },
 

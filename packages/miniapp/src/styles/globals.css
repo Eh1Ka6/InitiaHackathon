@@ -2,7 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Sequel Sans — Weezdraw brand font */
+@font-face {
+  font-family: "Sequel Sans";
+  src: url("/fonts/sequel-sans/Sequel Sans Light Body.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Sequel Sans";
+  src: url("/fonts/sequel-sans/Sequel Sans Roman Body.ttf") format("truetype");
+  font-weight: 310;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Sequel Sans";
+  src: url("/fonts/sequel-sans/Sequel Sans Medium Body.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Sequel Sans";
+  src: url("/fonts/sequel-sans/Sequel Sans Semi Bold Body.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Sequel Sans";
+  src: url("/fonts/sequel-sans/Sequel Sans Bold Body.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
+  --font-sequel-sans: "Sequel Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --bg: var(--tg-theme-bg-color, #0f0f0f);
   --text: var(--tg-theme-text-color, #ffffff);
   --hint: var(--tg-theme-hint-color, #999999);
@@ -17,8 +55,19 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-sequel-sans);
   margin: 0;
   overflow-x: hidden;
   min-height: 100vh;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% 0, 0 0;
+  }
+}
+
+.frosted-card {
+  -webkit-font-smoothing: subpixel-antialiased;
+  backface-visibility: hidden;
 }

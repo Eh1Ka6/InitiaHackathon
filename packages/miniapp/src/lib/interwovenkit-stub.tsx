@@ -9,8 +9,11 @@ interface AutoSign {
 
 interface InterwovenKitContextType {
   address: string | null;
+  walletType: "web3" | "initia" | null;
   isConnected: boolean;
   connect: () => Promise<void>;
+  connectWeb3: () => Promise<void>;
+  createInitiaWallet: () => Promise<void>;
   disconnect: () => void;
   requestTxSync: (params: any) => Promise<{ txHash: string }>;
   autoSign: AutoSign;
@@ -39,20 +42,49 @@ function generateMockTxHash(): string {
 
 export function InterwovenKitProvider({ children }: { children: ReactNode }) {
   const [address, setAddress] = useState<string | null>(null);
+  const [walletType, setWalletType] = useState<"web3" | "initia" | null>(null);
   const [autoSignState, setAutoSignState] = useState<Record<string, boolean>>({});
 
-  const connect = useCallback(async () => {
-    // Simulate connection delay
-    await new Promise((r) => setTimeout(r, 500));
+  const createInitiaWallet = useCallback(async () => {
+    // Simulate Ghost Wallet creation (InterwovenKit native)
+    await new Promise((r) => setTimeout(r, 600));
     const mockAddr = generateMockAddress();
     setAddress(mockAddr);
-    console.log("[InterwovenKit Stub] Connected:", mockAddr);
+    setWalletType("initia");
+    console.log("[InterwovenKit] Created Initia wallet:", mockAddr);
   }, []);
+
+  const connectWeb3 = useCallback(async () => {
+    const eth = (window as any).ethereum;
+    if (!eth) {
+      const msg = "No Web3 wallet detected. Install MetaMask or another wallet.";
+      if (window.Telegram?.WebApp?.showAlert) {
+        window.Telegram.WebApp.showAlert(msg);
+      } else {
+        alert(msg);
+      }
+      return;
+    }
+    try {
+      const accounts: string[] = await eth.request({ method: "eth_requestAccounts" });
+      if (accounts && accounts[0]) {
+        setAddress(accounts[0]);
+        setWalletType("web3");
+        console.log("[Web3] Connected:", accounts[0]);
+      }
+    } catch (err: any) {
+      console.error("[Web3] Connect failed:", err);
+    }
+  }, []);
+
+  // Legacy default connect = create Initia wallet (for backwards compat)
+  const connect = createInitiaWallet;
 
   const disconnect = useCallback(() => {
     setAddress(null);
+    setWalletType(null);
     setAutoSignState({});
-    console.log("[InterwovenKit Stub] Disconnected");
+    console.log("[Wallet] Disconnected");
   }, []);
 
   const requestTxSync = useCallback(async (_params: any): Promise<{ txHash: string }> => {
@@ -88,8 +120,11 @@ export function InterwovenKitProvider({ children }: { children: ReactNode }) {
     <InterwovenKitContext.Provider
       value={{
         address,
+        walletType,
         isConnected: address !== null,
         connect,
+        connectWeb3,
+        createInitiaWallet,
         disconnect,
         requestTxSync,
         autoSign,

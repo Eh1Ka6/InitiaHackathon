@@ -108,15 +108,27 @@ export async function acceptWager(req: Request, res: Response) {
       return;
     }
 
+    // DEV: allow self-accept for testing (use fake opponent ID)
     if (opponent.id === wager.creatorId) {
-      res.status(400).json({ error: "Cannot accept your own wager" });
-      return;
+      // Create a test opponent user
+      const testOpponent = await prisma.telegramUser.upsert({
+        where: { telegramId: `test-opponent-${wagerId}` },
+        update: {},
+        create: {
+          telegramId: `test-opponent-${wagerId}`,
+          firstName: "TestOpponent",
+          username: `test_opponent_${wagerId}`,
+        },
+      });
+      await prisma.wagerEntry.create({
+        data: { wagerId, userId: testOpponent.id },
+      });
+    } else {
+      // Create entry for opponent
+      await prisma.wagerEntry.create({
+        data: { wagerId, userId: opponent.id },
+      });
     }
-
-    // Create entry for opponent
-    await prisma.wagerEntry.create({
-      data: { wagerId, userId: opponent.id },
-    });
 
     const updated = await prisma.wager.update({
       where: { id: wagerId },
@@ -157,9 +169,30 @@ export async function fundWager(req: Request, res: Response) {
       data: { funded: true, depositTxHash: txHash },
     });
 
-    // Check if all entries are funded
-    const allEntries = await prisma.wagerEntry.findMany({ where: { wagerId } });
-    const allFunded = allEntries.every((e) => e.funded);
+    // DEV: auto-fund test opponents + give them a random score
+    const allEntries = await prisma.wagerEntry.findMany({
+      where: { wagerId },
+      include: { user: true },
+    });
+    for (const e of allEntries) {
+      if (e.user.telegramId.startsWith("test-opponent-") && !e.funded) {
+        const randomScore = Math.floor(Math.random() * 30) + 5;
+        await prisma.wagerEntry.update({
+          where: { id: e.id },
+          data: {
+            funded: true,
+            depositTxHash: "0xdev-test-deposit",
+            score: randomScore,
+            playTimeMs: randomScore * 500,
+            playedAt: new Date(),
+          },
+        });
+      }
+    }
+
+    // Re-check after auto-fund
+    const refreshedEntries = await prisma.wagerEntry.findMany({ where: { wagerId } });
+    const allFunded = refreshedEntries.every((e) => e.funded);
 
     if (allFunded && allEntries.length >= 2) {
       const gameSeed = crypto.randomBytes(16).toString("hex");
