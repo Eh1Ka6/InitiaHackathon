@@ -15,4 +15,4 @@ COPY --from=builder /app /app
 WORKDIR /app/packages/backend
 ENV NODE_ENV=production
 EXPOSE 3002
-CMD ["npx", "tsx", "src/index.ts"]
+CMD sh -c "npx prisma db push --accept-data-loss && npx tsx src/index.ts"
