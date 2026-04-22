@@ -1,0 +1,16 @@
+{
+  "network": "initia",
+  "chainId": 245901640121214,
+  "deployer": "0xE65460ae5DF23f0Ea2c88590f7b16F4703843898",
+  "timestamp": "2026-04-22T23:10:44.809Z",
+  "base": {
+    "AccessRegistry": "0x7CcE16Bb2d51B79Bd3D7A9b5f3f5E2a9d0C1715d",
+    "FeeRouter": "0x4e90d632aD8c16fd8C910DbFBEAEaC2dc3B331eB",
+    "WeezEscrow": "0x361fE09a47eb7fdDcC023749AaC845c5EC488294"
+  },
+  "contracts": {
+    "MockBandVRF": "0x5359dB33CF615eEdd738a7d72E8104de050F6B7d",
+    "RandomnessAdapter": "0x3c6474f137dab914835BfE7eA9F784B95716c517",
+    "DrawHub": "0x2302B01a4d139FACD28A0d2D1AD74330bE4Fd993"
+  }
+}

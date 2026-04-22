@@ -1,5 +1,9 @@
 import { ethers } from "ethers";
 import { config } from "../config";
+// TODO: regenerate from artifacts once contracts build at
+// packages/contracts/artifacts/contracts/core/DrawHub.sol/DrawHub.json
+import DRAWHUB_ABI from "../abi/DrawHub.json";
+import RANDOMNESS_ADAPTER_ABI from "../abi/RandomnessAdapter.json";
 
 const WAGER_ABI = [
   "function createCompetition(bytes calldata params) external returns (uint256)",
@@ -76,4 +80,31 @@ export async function cancelOnChain(competitionId: number): Promise<string> {
   return tx.hash;
 }
 
-export { ESCROW_ABI, getProvider };
+/* ---------- DrawHub / RandomnessAdapter ---------- */
+
+export function getDrawHubContract() {
+  if (!config.DRAWHUB_ADDRESS) {
+    throw new Error("DRAWHUB_ADDRESS env var not set");
+  }
+  return new ethers.Contract(config.DRAWHUB_ADDRESS, DRAWHUB_ABI as any, getWallet());
+}
+
+export function getDrawHubReadOnly() {
+  if (!config.DRAWHUB_ADDRESS) {
+    throw new Error("DRAWHUB_ADDRESS env var not set");
+  }
+  return new ethers.Contract(config.DRAWHUB_ADDRESS, DRAWHUB_ABI as any, getProvider());
+}
+
+export function getRandomnessAdapterContract() {
+  if (!config.RANDOMNESS_ADAPTER_ADDRESS) {
+    throw new Error("RANDOMNESS_ADAPTER_ADDRESS env var not set");
+  }
+  return new ethers.Contract(
+    config.RANDOMNESS_ADAPTER_ADDRESS,
+    RANDOMNESS_ADAPTER_ABI as any,
+    getWallet()
+  );
+}
+
+export { ESCROW_ABI, DRAWHUB_ABI, RANDOMNESS_ADAPTER_ABI, getProvider };

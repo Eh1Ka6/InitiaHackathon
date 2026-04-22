@@ -385,6 +385,20 @@ export default function CashGame() {
           👤
         </button>
 
+        <button
+          onClick={() => navigate("/draws")}
+          className="fixed top-3 left-3 z-30 px-3 h-10 rounded-full flex items-center justify-center text-white text-xs uppercase tracking-widest"
+          style={{
+            background: "rgba(255,255,255,0.2)",
+            backdropFilter: "blur(8px)",
+            border: "1px solid rgba(255,255,255,0.3)",
+            fontFamily: "var(--font-sequel-sans)",
+            fontWeight: 600,
+          }}
+        >
+          Draws
+        </button>
+
         {phase !== "frames" && (
           <div
             className="fixed left-0 right-0 flex justify-center pointer-events-none z-50 transition-opacity duration-300"

@@ -11,4 +11,8 @@ export const config = {
   FEE_ROUTER_ADDR: process.env.FEE_ROUTER_ADDR || "",
   ESCROW_ADDR: process.env.ESCROW_ADDR || "",
   WAGER_CONTRACT_ADDR: process.env.WAGER_CONTRACT_ADDR || "",
+  // Draw-related environment vars
+  DRAWHUB_ADDRESS: process.env.DRAWHUB_ADDRESS || "",
+  RANDOMNESS_ADAPTER_ADDRESS: process.env.RANDOMNESS_ADAPTER_ADDRESS || "",
+  ADMIN_TOKEN: process.env.ADMIN_TOKEN || "",
 };

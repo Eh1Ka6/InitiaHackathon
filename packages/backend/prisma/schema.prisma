@@ -24,6 +24,15 @@ enum WagerStatus {
   EXPIRED
 }
 
+enum DrawStatus {
+  OPEN
+  AWAITING_QUALIFIERS
+  QUALIFIED
+  RANDOMNESS_REQUESTED
+  SETTLED
+  CANCELLED
+}
+
 model TelegramUser {
   id             Int      @id @default(autoincrement())
   telegramId     String   @unique
@@ -38,6 +47,7 @@ model TelegramUser {
 
   createdWagers Wager[]      @relation("WagerCreator")
   wagerEntries  WagerEntry[]
+  drawEntries   DrawEntry[]
 }
 
 model Wager {
@@ -83,4 +93,46 @@ model WagerEntry {
 
   @@unique([wagerId, userId])
   @@index([wagerId])
+}
+
+model Draw {
+  id                 Int         @id @default(autoincrement())
+  onChainDrawId      String      @unique // draws[drawId] on DrawHub
+  status             DrawStatus  @default(OPEN)
+  entryFee           String                 // wei as string
+  deadline           DateTime
+  multiplierConfigId Int
+  gameSeed           String?                // Stack game seed for this draw
+  vrfRequestId       String?
+  winnerAddress      String?
+  multiplier         Int?                    // 300, 100, 50, 20, 10, or 8
+  payout             String?
+  txHashCreate       String?
+  txHashSettle       String?
+  entries            DrawEntry[]
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  @@index([status])
+  @@index([deadline])
+}
+
+model DrawEntry {
+  id            Int          @id @default(autoincrement())
+  drawId        Int
+  draw          Draw         @relation(fields: [drawId], references: [id])
+  userId        Int
+  user          TelegramUser @relation(fields: [userId], references: [id])
+  walletAddress String                       // Initia wallet that deposited
+  homeChainId   String                       // "137", "56", "interwoven-1" — for analytics
+  depositTxHash String?
+  deposited     Boolean      @default(false)
+  score         Int?
+  playTimeMs    Int?
+  qualified     Boolean      @default(false)
+  playedAt      DateTime?
+  createdAt     DateTime     @default(now())
+
+  @@unique([drawId, walletAddress])
+  @@index([drawId])
 }

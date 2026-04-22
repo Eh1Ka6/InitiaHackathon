@@ -76,7 +76,7 @@ export default function EnterDrawModal({ slide, onClose }: Props) {
   const handlePlay = () => {
     const slideId = slide.amount.replace(/\D/g, ""); // "10", "50", "500"
     onClose();
-    navigate(`/draw/${slideId}`);
+    navigate(`/draw-legacy/${slideId}`);
   };
 
   return (
