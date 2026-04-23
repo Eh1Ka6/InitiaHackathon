@@ -41,7 +41,10 @@
 
 :root {
   --font-sequel-sans: "Sequel Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --bg: var(--tg-theme-bg-color, #0f0f0f);
+  /* Fallback is the Weezdraw hero blue — never show a black flash when the
+     Telegram theme vars are missing (e.g. opened in a desktop browser, or
+     before WebApp SDK has initialized). */
+  --bg: var(--tg-theme-bg-color, #013f88);
   --text: var(--tg-theme-text-color, #ffffff);
   --hint: var(--tg-theme-hint-color, #999999);
   --link: var(--tg-theme-link-color, #2481cc);
@@ -52,8 +55,12 @@
   --destructive: var(--tg-theme-destructive-text-color, #ff3b30);
 }
 
-body {
-  background: var(--bg);
+html, body {
+  background:
+    radial-gradient(ellipse 60% 50% at 0% 0%, #013f88 0%, transparent 100%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, #608ec9 0%, transparent 80%),
+    linear-gradient(180deg, #013f88 0%, #1c5199 50%, #5586c1 100%);
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-sequel-sans);
   margin: 0;
