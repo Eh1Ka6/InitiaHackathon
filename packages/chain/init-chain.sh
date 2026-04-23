@@ -3,9 +3,23 @@ set -uo pipefail
 # Deliberately NOT `set -e` — individual command failures print but don't kill
 # the container; entrypoint.sh decides whether to stay alive for log inspection.
 
+# Bump this whenever this script changes in a way that REQUIRES regenerating
+# genesis (e.g. genesis-structure fixes). On next container start, if the
+# recorded version in $HOME_DIR/.init-version doesn't match, we wipe and
+# re-init. This avoids needing a manual volume wipe or container recreate.
+INIT_VERSION="2026-04-24.1"
+
 HOME_DIR="${HOME_DIR:-/root/.minitia}"
 CHAIN_ID="${CHAIN_ID:-weezdraw-1}"
-EVM_CHAIN_ID="${EVM_CHAIN_ID:-1776970000}"
+# NOTE: minievm does NOT have a user-settable EVM chain_id field in genesis.
+# The EVM chain_id is derived deterministically from the Cosmos CHAIN_ID via
+#   ConvertCosmosChainIDToEthereumChainID(chainID) =
+#     uint64(keccak256(chainID)[:8]) % 4503599627370476
+# (see initia-labs/minievm x/evm/types/chain_config.go).
+# So EVM_CHAIN_ID is informational only; whatever the chain reports via
+# eth_chainId IS the truth. We keep this var so downstream UI configs can
+# optionally pin a known value, but we no longer write it into genesis.
+EVM_CHAIN_ID="${EVM_CHAIN_ID:-}"
 MONIKER="${MONIKER:-weezdraw-validator}"
 DENOM="${DENOM:-GAS}"
 KEY_NAME="${KEY_NAME:-validator}"
@@ -18,15 +32,28 @@ MNEMONIC="${VALIDATOR_MNEMONIC:-soap someone mountain melody slight surprise inp
 # How much GAS to mint into the deployer/validator account at genesis.
 GENESIS_SUPPLY="${GENESIS_SUPPLY:-100000000000000000000000000}"
 
-echo ">> init-chain.sh starting"
+echo ">> init-chain.sh starting (INIT_VERSION=$INIT_VERSION)"
 echo "   HOME_DIR=$HOME_DIR"
 echo "   CHAIN_ID=$CHAIN_ID"
-echo "   EVM_CHAIN_ID=$EVM_CHAIN_ID"
+echo "   EVM_CHAIN_ID=${EVM_CHAIN_ID:-<auto-derived from CHAIN_ID>}"
 echo "   DENOM=$DENOM"
 
+VERSION_FILE="$HOME_DIR/.init-version"
+
 if [ -f "$HOME_DIR/config/genesis.json" ]; then
-  echo ">> Genesis already exists — skipping init."
-  exit 0
+  existing_version=""
+  if [ -f "$VERSION_FILE" ]; then
+    existing_version="$(cat "$VERSION_FILE" 2>/dev/null || true)"
+  fi
+  if [ "$existing_version" = "$INIT_VERSION" ]; then
+    echo ">> Genesis already exists and INIT_VERSION matches ($INIT_VERSION) — skipping init."
+    exit 0
+  fi
+  echo ">> Stale genesis detected (existing='$existing_version', expected='$INIT_VERSION')."
+  echo ">> Wiping $HOME_DIR contents and re-initializing."
+  # Wipe everything *inside* the mounted volume but keep the mount point.
+  # shellcheck disable=SC2115
+  rm -rf "$HOME_DIR"/* "$HOME_DIR"/.[!.]* "$HOME_DIR"/..?* 2>/dev/null || true
 fi
 
 mkdir -p "$HOME_DIR"
@@ -68,10 +95,12 @@ minitiad genesis add-genesis-validator "$KEY_NAME" \
 echo ">> validating genesis"
 minitiad genesis validate --home "$HOME_DIR"
 
-echo ">> setting EVM chain id to $EVM_CHAIN_ID in genesis"
-tmp=$(mktemp)
-jq --argjson cid "$EVM_CHAIN_ID" '.app_state.evm.params.chain_id = ($cid | tostring)' \
-    "$HOME_DIR/config/genesis.json" > "$tmp" && mv "$tmp" "$HOME_DIR/config/genesis.json"
+# NOTE: we intentionally do NOT edit app_state.evm.params.chain_id — that field
+# does not exist in minievm's EVM Params proto (x/evm/types/types.proto). Any
+# unknown field here makes InitGenesis panic with:
+#   panic: unknown field "chain_id" in types.Params
+# The EVM chain_id is derived automatically from the Cosmos CHAIN_ID by
+# ConvertCosmosChainIDToEthereumChainID() and exposed via eth_chainId RPC.
 
 echo ">> rewriting bind addresses to 0.0.0.0"
 APP_TOML="$HOME_DIR/config/app.toml"
@@ -130,4 +159,7 @@ s = re.sub(r'(\[api\][\s\S]*?)(?=\n\[|\Z)',
 open(p, "w").write(s)
 PY
 
-echo ">> init-chain.sh complete"
+# Record the INIT_VERSION so future restarts know this genesis is fresh.
+echo "$INIT_VERSION" > "$VERSION_FILE"
+
+echo ">> init-chain.sh complete (INIT_VERSION=$INIT_VERSION)"
