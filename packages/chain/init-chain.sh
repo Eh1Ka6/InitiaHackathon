@@ -10,7 +10,7 @@ DENOM="${DENOM:-GAS}"
 # Deterministic mnemonic — used to derive both the Tendermint validator key
 # and the deployer/Gas Station account. Pre-fund this address with a huge
 # GAS balance at genesis so the deployer can fund test wallets freely.
-MNEMONIC="${VALIDATOR_MNEMONIC:-garment leader smile clutch remember inflict regret clinic hollow inspire shop exercise spot oval smoke liquid flock illegal absent recipe carry embody mystery relief}"
+MNEMONIC="${VALIDATOR_MNEMONIC:-soap someone mountain melody slight surprise input grunt ribbon flip obscure echo ecology pudding now strong sunny banner have steel avocado skull alone throw}"
 
 # How much GAS to mint into the deployer/validator account at genesis
 GENESIS_SUPPLY="${GENESIS_SUPPLY:-100000000000000000000000000}"
