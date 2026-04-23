@@ -17,8 +17,8 @@ RUN curl -sSL -o /tmp/minievm.tar.gz \
  && minitiad version
 
 WORKDIR /root
-COPY init-chain.sh /usr/local/bin/init-chain.sh
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY packages/chain/init-chain.sh /usr/local/bin/init-chain.sh
+COPY packages/chain/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/init-chain.sh /usr/local/bin/entrypoint.sh
 
 EXPOSE 8545 8546 26657 1317 9090
