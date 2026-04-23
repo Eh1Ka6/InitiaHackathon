@@ -8,19 +8,21 @@ CHAIN_ID="${CHAIN_ID:-weezdraw-1}"
 EVM_CHAIN_ID="${EVM_CHAIN_ID:-1776970000}"
 MONIKER="${MONIKER:-weezdraw-validator}"
 DENOM="${DENOM:-GAS}"
+KEY_NAME="${KEY_NAME:-validator}"
 
-# Deterministic mnemonic — used to derive both the Tendermint validator key
-# and the deployer/Gas Station account. Pre-fund this address with a huge
-# GAS balance at genesis so the deployer can fund test wallets freely.
+# Deterministic mnemonic — used to derive the deployer/Gas Station account.
+# Pre-fund this address with a huge GAS balance at genesis so the deployer
+# can fund test wallets freely.
 MNEMONIC="${VALIDATOR_MNEMONIC:-soap someone mountain melody slight surprise input grunt ribbon flip obscure echo ecology pudding now strong sunny banner have steel avocado skull alone throw}"
 
-# How much GAS to mint into the deployer/validator account at genesis
+# How much GAS to mint into the deployer/validator account at genesis.
 GENESIS_SUPPLY="${GENESIS_SUPPLY:-100000000000000000000000000}"
 
 echo ">> init-chain.sh starting"
 echo "   HOME_DIR=$HOME_DIR"
 echo "   CHAIN_ID=$CHAIN_ID"
 echo "   EVM_CHAIN_ID=$EVM_CHAIN_ID"
+echo "   DENOM=$DENOM"
 
 if [ -f "$HOME_DIR/config/genesis.json" ]; then
   echo ">> Genesis already exists — skipping init."
@@ -29,28 +31,42 @@ fi
 
 mkdir -p "$HOME_DIR"
 
-echo ">> minitiad init $MONIKER --chain-id $CHAIN_ID"
-minitiad init "$MONIKER" --chain-id "$CHAIN_ID" --home "$HOME_DIR" --default-denom "$DENOM" >/dev/null
+# NOTE: minievm's `init` takes --denom (NOT --default-denom). Using the wrong
+# flag makes init fail silently and no genesis.json is created.
+echo ">> minitiad init $MONIKER --chain-id $CHAIN_ID --denom $DENOM"
+minitiad init "$MONIKER" \
+  --chain-id "$CHAIN_ID" \
+  --home "$HOME_DIR" \
+  --denom "$DENOM"
 
-echo ">> importing validator/deployer mnemonic"
-echo "$MNEMONIC" | minitiad keys add validator \
-  --recover --keyring-backend test --home "$HOME_DIR" >/dev/null
+if [ ! -f "$HOME_DIR/config/genesis.json" ]; then
+  echo ">> FATAL: minitiad init did not produce a genesis.json. Aborting."
+  exit 1
+fi
 
-VAL_BECH32=$(minitiad keys show validator -a --keyring-backend test --home "$HOME_DIR")
+echo ">> importing deployer/validator mnemonic into keyring ($KEY_NAME)"
+echo "$MNEMONIC" | minitiad keys add "$KEY_NAME" \
+  --recover --keyring-backend test --home "$HOME_DIR"
+
+VAL_BECH32=$(minitiad keys show "$KEY_NAME" -a --keyring-backend test --home "$HOME_DIR")
 VAL_HEX=$(minitiad debug addr "$VAL_BECH32" 2>&1 | awk '/Address \(hex\):/ {print tolower($3)}')
 echo "   validator bech32: $VAL_BECH32"
 echo "   validator hex:    0x$VAL_HEX"
 
-echo ">> add-genesis-account: $VAL_BECH32 <- ${GENESIS_SUPPLY}${DENOM}"
-minitiad genesis add-genesis-account "$VAL_BECH32" "${GENESIS_SUPPLY}${DENOM}" --home "$HOME_DIR"
+# minievm genesis flow is: add-genesis-account + add-genesis-validator.
+# There is NO collect-gentxs / gentx flow — minievm is a single-validator
+# rollup so add-genesis-validator bakes the validator directly into genesis.
+# Both commands accept either a key name (from the keyring) or a bech32 addr.
+echo ">> add-genesis-account: $KEY_NAME <- ${GENESIS_SUPPLY}${DENOM}"
+minitiad genesis add-genesis-account "$KEY_NAME" "${GENESIS_SUPPLY}${DENOM}" \
+  --keyring-backend test --home "$HOME_DIR"
 
-echo ">> gentx for validator"
-minitiad genesis gentx validator "1000000000000${DENOM}" \
-  --chain-id "$CHAIN_ID" --keyring-backend test --home "$HOME_DIR" >/dev/null
+echo ">> add-genesis-validator: $KEY_NAME"
+minitiad genesis add-genesis-validator "$KEY_NAME" \
+  --keyring-backend test --home "$HOME_DIR"
 
-echo ">> collect-gentxs + validate"
-minitiad genesis collect-gentxs --home "$HOME_DIR" >/dev/null
-minitiad genesis validate --home "$HOME_DIR" >/dev/null
+echo ">> validating genesis"
+minitiad genesis validate --home "$HOME_DIR"
 
 echo ">> setting EVM chain id to $EVM_CHAIN_ID in genesis"
 tmp=$(mktemp)
@@ -92,6 +108,7 @@ sed -i 's|localhost:9090|0.0.0.0:9090|g' "$APP_TOML"
 sed -i 's|^persistent_peers\s*=.*|persistent_peers = ""|' "$CFG_TOML"
 sed -i 's|^seeds\s*=.*|seeds = ""|'                       "$CFG_TOML"
 sed -i 's|^addr_book_strict\s*=.*|addr_book_strict = false|' "$CFG_TOML"
+sed -i 's|^allow_duplicate_ip\s*=.*|allow_duplicate_ip = true|' "$CFG_TOML"
 
 # permissive CORS
 sed -i 's|^cors_allowed_origins\s*=.*|cors_allowed_origins = ["*"]|' "$CFG_TOML"
