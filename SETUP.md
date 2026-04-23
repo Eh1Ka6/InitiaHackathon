@@ -1,4 +1,4 @@
-# WeezWager — Developer Setup Guide
+# WeezDraw — Developer Setup Guide
 
 ## Prerequisites
 - Docker Desktop (must be running)
@@ -66,13 +66,13 @@ npx hardhat run scripts/deploy.ts --network initia
 
 ```bash
 # Start PostgreSQL (Docker)
-docker run -d --name weezwager-db -e POSTGRES_PASSWORD=weezwager -e POSTGRES_DB=weezwager -p 5432:5432 postgres:16
+docker run -d --name weezdraw-db -e POSTGRES_PASSWORD=weezdraw -e POSTGRES_DB=weezdraw -p 5432:5432 postgres:16
 
 # Configure backend
 cd packages/backend
 cp .env.example .env
 # Edit .env with:
-# DATABASE_URL=postgresql://postgres:weezwager@localhost:5432/weezwager
+# DATABASE_URL=postgresql://postgres:weezdraw@localhost:5432/weezdraw
 # Fill in contract addresses from deployed.json
 # Fill in BOT_TOKEN from BotFather
 
@@ -84,7 +84,7 @@ npx prisma db push
 
 1. Open Telegram, message @BotFather
 2. Send `/newbot`, follow prompts
-3. Name it "WeezWager" (or similar)
+3. Name it "WeezDraw" (or similar)
 4. Copy the bot token to `.env` files
 5. Set commands: `/setcommands` →
 ```

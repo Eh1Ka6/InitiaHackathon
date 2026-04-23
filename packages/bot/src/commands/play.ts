@@ -7,7 +7,7 @@ export async function playCommand(ctx: CommandContext<Context>) {
 
   await ctx.reply(
     `🎲 *Ready to win?*\n\n` +
-      `Tap below to open WeezWager and enter a prize draw.`,
+      `Tap below to open WeezDraw and enter a prize draw.`,
     { reply_markup: keyboard, parse_mode: "Markdown" }
   );
 }

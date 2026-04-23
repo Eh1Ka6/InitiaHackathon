@@ -23,7 +23,7 @@ export function useDeposit(competitionId: number, entryFee: string) {
         await autoSign.enable(chainId, { duration: 3600 });
       }
 
-      // Call WeezWager.enter() via requestTxSync
+      // Call WeezDraw.enter() via requestTxSync
       const { txHash } = await requestTxSync({
         chainId,
         messages: [

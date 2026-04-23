@@ -4,7 +4,7 @@ async function main() {
   const signers = await ethers.getSigners();
   const [deployer, player1, player2] = signers;
 
-  console.log("=== WeezWager Local Smoke Test ===\n");
+  console.log("=== WeezDraw Local Smoke Test ===\n");
   console.log("Deployer:", deployer.address);
   console.log("Player1: ", player1.address);
   console.log("Player2: ", player2.address);
@@ -43,14 +43,14 @@ async function main() {
   const wager = await WeezWager.deploy(accessRegistryAddr, escrowAddr, feeRouterAddr);
   await wager.waitForDeployment();
   const wagerAddr = await wager.getAddress();
-  console.log("WeezWager:     ", wagerAddr);
+  console.log("WeezDraw:      ", wagerAddr);
 
   // ─── Configure roles & modules ───
 
   console.log("\n--- Configuring roles ---");
 
   await (await accessRegistry.registerModule(wagerAddr)).wait();
-  console.log("WeezWager registered as module");
+  console.log("WeezDraw registered as module");
 
   // Grant escrow module status so it can receive funds
   await (await accessRegistry.registerModule(escrowAddr)).wait();

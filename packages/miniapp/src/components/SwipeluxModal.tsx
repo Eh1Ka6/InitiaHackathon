@@ -42,7 +42,7 @@ export default function SwipeluxModal({ onClose }: Props) {
               link: "#40C4FF",
             }}
             signature={{
-              text: "Powered by WeezWager",
+              text: "Powered by WeezDraw",
               logoUrl: "https://weezdraw.com/images/favicon-wd-transp.png",
             }}
             defaultValues={{

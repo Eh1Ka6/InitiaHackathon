@@ -13,7 +13,7 @@ const { app } = require("./app");
 const { config } = require("./config");
 
 app.listen(config.PORT, () => {
-  console.log(`WeezWager backend running on port ${config.PORT}`);
+  console.log(`WeezDraw backend running on port ${config.PORT}`);
 });
 
 // Start background services — each wrapped so a failure can't kill the server

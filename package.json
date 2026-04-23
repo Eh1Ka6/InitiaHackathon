@@ -1,8 +1,8 @@
 {
-  "name": "weezwager",
+  "name": "weezdraw",
   "version": "1.0.0",
   "private": true,
-  "description": "WeezWager — Telegram social wagering on Initia",
+  "description": "WeezDraw — Telegram social wagering on Initia",
   "workspaces": [
     "packages/*"
   ],

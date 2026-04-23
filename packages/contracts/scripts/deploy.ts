@@ -41,18 +41,18 @@ async function main() {
   console.log("   WeezEscrow:", escrowAddr);
 
   // ─── 4. Deploy WeezWager (non-upgradeable) ───
-  console.log("\n4. Deploying WeezWager...");
+  console.log("\n4. Deploying WeezDraw...");
   const WeezWager = await ethers.getContractFactory("WeezWager");
   const wager = await WeezWager.deploy(accessRegistryAddr, escrowAddr, feeRouterAddr);
   await wager.waitForDeployment();
   const wagerAddr = await wager.getAddress();
-  console.log("   WeezWager:", wagerAddr);
+  console.log("   WeezDraw:", wagerAddr);
 
   // ─── 5. Register WeezWager as a module in AccessRegistry ───
-  console.log("\n5. Registering WeezWager as active module...");
+  console.log("\n5. Registering WeezDraw as active module...");
   const registerTx = await accessRegistry.registerModule(wagerAddr);
   await registerTx.wait();
-  console.log("   WeezWager registered as module");
+  console.log("   WeezDraw registered as module");
 
   // ─── 6. Grant RESOLVER_ROLE and OPERATOR_ROLE to deployer ───
   console.log("\n6. Granting roles to deployer...");
@@ -81,7 +81,7 @@ async function main() {
   console.log("  AccessRegistry:", accessRegistryAddr);
   console.log("  FeeRouter:     ", feeRouterAddr);
   console.log("  WeezEscrow:    ", escrowAddr);
-  console.log("  WeezWager:     ", wagerAddr);
+  console.log("  WeezDraw:      ", wagerAddr);
   console.log("════════════════════════════════════════");
 
   // ─── 9. Save addresses to deployed.json ───

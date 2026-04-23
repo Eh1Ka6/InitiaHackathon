@@ -12,7 +12,7 @@ export default function Home() {
     <div className="p-4 min-h-screen">
       <div className="text-center mb-6">
         <h1 className="text-2xl font-bold" style={{ fontFamily: "Orbitron, monospace" }}>
-          WeezWager
+          WeezDraw
         </h1>
         <p className="text-[var(--hint)] text-sm mt-1">Wager. Play. Win.</p>
       </div>

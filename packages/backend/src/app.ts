@@ -16,5 +16,5 @@ app.use("/api/wagers", wagerRoutes);
 app.use("/api/draws", drawRoutes);
 
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok", service: "weezwager-backend" });
+  res.json({ status: "ok", service: "weezdraw-backend" });
 });

@@ -1,4 +1,4 @@
-# WeezWager — Wager. Play. Win.
+# WeezDraw — Wager. Play. Win.
 
 A Telegram Mini App where players challenge each other to a Stack game with real crypto stakes on an Initia EVM appchain. Higher score wins — settlement is automatic.
 

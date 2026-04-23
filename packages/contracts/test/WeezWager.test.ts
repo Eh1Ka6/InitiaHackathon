@@ -4,7 +4,7 @@ import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { AccessRegistry, FeeRouter, WeezEscrow, WeezWager } from "../typechain-types";
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 
-describe("WeezWager", function () {
+describe("WeezDraw", function () {
   // ─── Fixture ───
   async function deployAllFixture() {
     const [deployer, player1, player2, resolver, nonResolver] = await ethers.getSigners();
