@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -uo pipefail
+# Deliberately NOT `set -e` — individual command failures print but don't kill
+# the container; entrypoint.sh decides whether to stay alive for log inspection.
 
 HOME_DIR="${HOME_DIR:-/root/.minitia}"
 CHAIN_ID="${CHAIN_ID:-weezdraw-1}"
