@@ -204,11 +204,42 @@ export const api = {
 
   async getDraw(id: string): Promise<Draw> {
     if (MOCK) return mockDraw(id);
+    // Try community-draws first (user-created draws via CommunityDrawHub).
+    // These are what /draws lists and what the bot's /createdraw produces.
     try {
-      return await request<Draw>(`/draws/${id}`);
-    } catch (err) {
-      console.warn("[api.getDraw] backend not ready, using mock data:", err);
-      return mockDraw(id);
+      const cd = await request<CommunityDraw>(`/community-draws/${id}`);
+      return {
+        id: String(cd.onChainId),
+        status: cd.status === "OPEN" ? "OPEN" : "SETTLED",
+        entryFeeInit: (() => {
+          try {
+            const wei = BigInt(cd.ticketPrice || "0");
+            return String(Number(wei / 10n ** 18n));
+          } catch {
+            return "?";
+          }
+        })(),
+        deadline: cd.endTimestamp * 1000,
+        multiplierConfigId: 0,
+        participants: Array.from({ length: cd.ticketsSold }, () => ({
+          walletAddress: "",
+          homeChainId: "interwoven-1",
+        })),
+        maxParticipants: cd.maxTickets,
+        createdAt: Date.now(),
+      };
+    } catch (communityErr) {
+      // Fall back to protocol DrawHub draws.
+      try {
+        return await request<Draw>(`/draws/${id}`);
+      } catch (protocolErr) {
+        console.warn(
+          "[api.getDraw] both community and protocol fetch failed, using mock:",
+          communityErr,
+          protocolErr
+        );
+        return mockDraw(id);
+      }
     }
   },
 
