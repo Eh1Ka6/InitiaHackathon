@@ -9,16 +9,21 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@initia/initia-registry-types": "^1.0.13",
+    "@initia/interwovenkit-react": "^2.8.0",
+    "@rainbow-me/rainbowkit": "^2.2.10",
     "@swipelux/onramp-react": "^1.0.3",
     "@tanstack/react-query": "^5.56.0",
     "framer-motion": "^12.38.0",
-    "react": "^18.3.0",
-    "react-dom": "^18.3.0",
-    "react-router-dom": "^6.26.0"
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-router-dom": "^6.26.0",
+    "viem": "^2.48.4",
+    "wagmi": "^2.17.2"
   },
   "devDependencies": {
-    "@types/react": "^18.3.0",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.3.0",
     "autoprefixer": "^10.4.0",
     "postcss": "^8.4.0",
