@@ -21,8 +21,10 @@ A Telegram Mini App where players challenge each other to a Stack game with real
 ┌──────────────┐     ┌──────────────────┐
 │ Mini App     │────▶│ Initia EVM       │
 │ React + Game │     │ Appchain         │
-│ InterwovenKit│     │  ├ WeezWager     │
+│ InterwovenKit│     │  ├ WeezDraw      │
 └──────────────┘     │  ├ WeezEscrow    │
+                     │  ├ DrawHub       │
+                     │  ├ CommunityDraw │
                      │  └ FeeRouter     │
                      └──────────────────┘
 ```
@@ -48,14 +50,14 @@ A Telegram Mini App where players challenge each other to a Stack game with real
 
 | Contract | Purpose |
 |----------|---------|
-| `WeezWager` | 1v1 wagering logic — create, enter, startGame, settle, cancel |
+| `WeezDraw` | 1v1 wagering logic — create, enter, startGame, settle, cancel |
 | `DrawHub` | Sponsored / protocol-run draw lifecycle (VRF-backed) |
 | `CommunityDrawHub` | User-created prize draws with ticket sales + VRF settlement |
-| `RandomnessAdapter` | Single-consumer VRF adapter (wraps BandVRF) |
+| `RandomnessAdapter` | Single-consumer VRF adapter (wraps BandVRF) — one per hub |
 | `MockBandVRF` | Stand-in VRF oracle for hackathon demo |
 | `WeezEscrow` | Holds all stakes / prize pools / ticket payments |
 | `FeeRouter` | Platform fee collection and distribution (configurable) |
-| `AccessRegistry` | Role-based access control (admin, resolver, operator, creator) |
+| `AccessRegistry` | Role-based access control (admin, resolver, operator, creator, community-creator) |
 
 ### Live Deployment (Initia appchain `weezdraw-1`)
 
@@ -66,14 +68,15 @@ A Telegram Mini App where players challenge each other to a Stack game with real
 
 | Contract | Address |
 |----------|---------|
-| AccessRegistry     | `0x7CcE16Bb2d51B79Bd3D7A9b5f3f5E2a9d0C1715d` |
-| FeeRouter          | `0x4e90d632aD8c16fd8C910DbFBEAEaC2dc3B331eB` |
-| WeezEscrow         | `0x361fE09a47eb7fdDcC023749AaC845c5EC488294` |
-| WeezWager          | `0xD29c06CeA355b7207739f261E13bAa43be5b8dfc` |
-| DrawHub            | `0x2302B01a4d139FACD28A0d2D1AD74330bE4Fd993` |
-| RandomnessAdapter  | `0x3c6474f137dab914835BfE7eA9F784B95716c517` |
-| MockBandVRF        | `0x5359dB33CF615eEdd738a7d72E8104de050F6B7d` |
-| CommunityDrawHub   | _pending deployment — see `packages/contracts/scripts/deploy-community-draw.ts`_ |
+| AccessRegistry             | `0x8fb4d8Ff0a676e5dA88234F7556B91Fb8C70F0C8` |
+| FeeRouter                  | `0x7845094500CDdbCcC7139E2bA292c9ee4D3b1b14` |
+| WeezEscrow                 | `0x75c8a81e660e53d8843334a9dF933FC757Ae3f18` |
+| WeezDraw                   | `0xb84572d82b62e112fe3063640b5712A91BB73885` |
+| DrawHub                    | `0x89D70c653DfDc28fc457d1e3c97279f9eDbdf769` |
+| RandomnessAdapter          | `0xD29c06CeA355b7207739f261E13bAa43be5b8dfc` |
+| MockBandVRF                | `0x361fE09a47eb7fdDcC023749AaC845c5EC488294` |
+| CommunityDrawHub           | `0x5359dB33CF615eEdd738a7d72E8104de050F6B7d` |
+| RandomnessAdapterCommunity | `0xE0d190A1E7949831403434E989F641c7BF4E2143` |
 
 Canonical addresses are kept in [`packages/contracts/deployments/initia/draws.json`](packages/contracts/deployments/initia/draws.json) and [`.initia/submission.json`](.initia/submission.json).
 
@@ -111,7 +114,7 @@ See [SETUP.md](SETUP.md) for detailed local-dev instructions.
 ## Running the Demo
 
 1. Open Telegram and find the bot: **@WeezDrawBot** (token `8220632771:...`).
-2. In any chat, run `/wager @friend 50` to open a 1v1 Stack challenge with a 50 INIT stake, or `/draws` to browse community draws.
+2. In any chat, run `/wager @friend 50` to open a 1v1 Stack challenge with a 50 INIT stake, `/draws` to browse community draws, or `/createdraw` to start your own community draw.
 3. The bot replies with an inline keyboard → tap **Open** to launch the Mini App (served from Coolify; URL is published via `MINIAPP_URL` in the bot's env).
 4. Connect via InterwovenKit (auto-signing Ghost Wallet), play, and settlement hits the appchain automatically.
 

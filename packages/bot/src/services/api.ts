@@ -1,7 +1,17 @@
 import { config } from "../config";
-import { Wager, TelegramUser } from "../types";
+import { Wager, TelegramUser, CommunityDraw } from "../types";
 
 const BASE = config.API_URL + "/api";
+
+export class ApiError extends Error {
+  status: number;
+  code?: string;
+  constructor(message: string, status: number, code?: string) {
+    super(message);
+    this.status = status;
+    this.code = code;
+  }
+}
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
@@ -9,8 +19,8 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     ...options,
   });
   if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error(body.error || `API error: ${res.status}`);
+    const body: any = await res.json().catch(() => ({}));
+    throw new ApiError(body.error || `API error: ${res.status}`, res.status, body.code);
   }
   return res.json();
 }
@@ -57,6 +67,39 @@ export const api = {
     return request<any>(`/wagers/${poolId}/accept`, {
       method: "PATCH",
       body: JSON.stringify({ telegramId, side }),
+    });
+  },
+
+  // ---- Community Draws (CommunityDrawHub) ----
+
+  createCommunityDraw(data: {
+    creatorTelegramId: string;
+    title: string;
+    prizeAmount: string;
+    ticketPrice: string;
+    maxTickets: number;
+    durationHours: number;
+    winnerCount: number;
+    chatId: string;
+  }) {
+    return request<CommunityDraw>("/community-draws", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
+
+  getCommunityDraw(id: number) {
+    return request<CommunityDraw>(`/community-draws/${id}`);
+  },
+
+  listOpenCommunityDraws(limit = 5) {
+    return request<CommunityDraw[]>(`/community-draws?status=OPEN&limit=${limit}&orderBy=endTimestamp`);
+  },
+
+  buyCommunityTicket(drawId: number, telegramId: string) {
+    return request<CommunityDraw>(`/community-draws/${drawId}/tickets`, {
+      method: "POST",
+      body: JSON.stringify({ telegramId }),
     });
   },
 };

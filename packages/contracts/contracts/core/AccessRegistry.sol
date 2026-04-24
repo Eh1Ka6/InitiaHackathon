@@ -19,6 +19,7 @@ contract AccessRegistry is
     bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
     bytes32 public constant GAME_CREATOR_ROLE = keccak256("GAME_CREATOR_ROLE");
     bytes32 public constant RESOLVER_ROLE = keccak256("RESOLVER_ROLE");
+    bytes32 public constant COMMUNITY_CREATOR_ROLE = keccak256("COMMUNITY_CREATOR_ROLE");
 
     // ──────────────────────────────────────────────── State
     mapping(address => bool) private _registeredModules;
@@ -60,6 +61,7 @@ contract AccessRegistry is
         _setRoleAdmin(OPERATOR_ROLE, PROTOCOL_ADMIN_ROLE);
         _setRoleAdmin(GAME_CREATOR_ROLE, PROTOCOL_ADMIN_ROLE);
         _setRoleAdmin(RESOLVER_ROLE, PROTOCOL_ADMIN_ROLE);
+        _setRoleAdmin(COMMUNITY_CREATOR_ROLE, PROTOCOL_ADMIN_ROLE);
     }
 
     // ──────────────────────────────────────────────── Module Management

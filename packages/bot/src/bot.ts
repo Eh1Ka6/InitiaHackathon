@@ -7,6 +7,11 @@ import { helpCommand } from "./commands/help";
 import { playCommand } from "./commands/play";
 import { profileCommand } from "./commands/profile";
 import { balanceCommand } from "./commands/balance";
+import { createDrawCommand } from "./commands/createdraw";
+import { drawsCommand } from "./commands/draws";
+
+// Callbacks
+import { buyTicketCallback } from "./callbacks/buyTicket";
 
 export const bot = new Bot(config.BOT_TOKEN);
 
@@ -33,3 +38,8 @@ bot.command("help", helpCommand);
 bot.command("play", playCommand);
 bot.command("profile", profileCommand);
 bot.command("balance", balanceCommand);
+bot.command("createdraw", createDrawCommand);
+bot.command("draws", drawsCommand);
+
+// Callbacks
+bot.callbackQuery(/^buy_ticket:\d+$/, buyTicketCallback);

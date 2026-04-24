@@ -37,3 +37,26 @@ export interface Wager {
   winnerId: number | null;
   entries: WagerEntry[];
 }
+
+export type CommunityDrawStatus =
+  | "NONE"
+  | "OPEN"
+  | "RANDOMNESS_REQUESTED"
+  | "SETTLED"
+  | "CANCELLED";
+
+export interface CommunityDraw {
+  id: number;
+  onChainId: number | null;
+  status: CommunityDrawStatus;
+  title: string;
+  creatorId: number;
+  creator?: TelegramUser;
+  prizeAmount: string;
+  ticketPrice: string;
+  maxTickets: number;
+  ticketsSold: number;
+  winnerCount: number;
+  endTimestamp: number; // seconds
+  chatId: string;
+}

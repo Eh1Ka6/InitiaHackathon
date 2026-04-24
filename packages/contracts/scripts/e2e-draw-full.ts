@@ -18,7 +18,9 @@ async function main() {
 
   // Create a new draw with near-term deadline (~40s)
   const drawId = BigInt(Date.now());
-  const entryFee = ethers.parseEther("0.00001"); // 0.00001 INIT to conserve chain gas funds
+  // Gas Station has ~100 Gwei of fee token total → keep everything in wei scale
+  const entryFee = 1_000_000n; // 1M wei
+  const fundPerPlayer = 10_000_000n; // 10M wei (covers entryFee + gas)
   const deadline = BigInt(Math.floor(Date.now() / 1000) + 40);
   const configId = 0;
 
@@ -38,11 +40,15 @@ async function main() {
   console.log("\n1. Fund players from deployer...");
   for (const p of players) {
     const bal = await ethers.provider.getBalance(p.address);
-    const needed = entryFee + ethers.parseEther("0.00002");
-    if (bal < needed) {
-      const tx = await deployer.sendTransaction({ to: p.address, value: needed });
+    if (bal < fundPerPlayer) {
+      const tx = await deployer.sendTransaction({
+        to: p.address,
+        value: fundPerPlayer - bal,
+      });
       await tx.wait();
-      console.log(`   Funded ${p.address.slice(0, 10)}`);
+      console.log(`   Funded ${p.address.slice(0, 10)} (${fundPerPlayer} wei)`);
+    } else {
+      console.log(`   ${p.address.slice(0, 10)} already has ${bal} wei`);
     }
   }
 

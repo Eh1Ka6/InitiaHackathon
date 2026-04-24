@@ -1,4 +1,4 @@
-import { Wager } from "../types";
+import { Wager, CommunityDraw } from "../types";
 
 export function formatWagerMessage(wager: Wager, creatorName: string, opponentName?: string): string {
   return (
@@ -61,4 +61,45 @@ export function formatPoolMessage(description: string, duration: string): string
     `⏰ Closes in ${duration}\n\n` +
     `Pick your side!`
   );
+}
+
+function formatEndsIn(endTimestamp: number): string {
+  const now = Math.floor(Date.now() / 1000);
+  const diff = endTimestamp - now;
+  if (diff <= 0) return "ended";
+  const hours = Math.floor(diff / 3600);
+  const mins = Math.floor((diff % 3600) / 60);
+  if (hours >= 24) return `${Math.floor(hours / 24)}d ${hours % 24}h`;
+  if (hours > 0) return `${hours}h ${mins}m`;
+  return `${mins}m`;
+}
+
+export function formatCommunityDrawMessage(draw: CommunityDraw, creatorName: string): string {
+  const idLine = draw.onChainId !== null ? `Draw #${draw.onChainId}` : `Draw #${draw.id} (pending)`;
+  return (
+    `🎟️ *Community Draw Created!*\n\n` +
+    `*${draw.title}*\n` +
+    `${idLine}\n` +
+    `👤 Host: ${creatorName}\n\n` +
+    `🏆 Prize: *${draw.prizeAmount} INIT* (${draw.winnerCount} winner${draw.winnerCount > 1 ? "s" : ""})\n` +
+    `🎫 Ticket: ${draw.ticketPrice} INIT\n` +
+    `📊 Sold: ${draw.ticketsSold} / ${draw.maxTickets}\n` +
+    `⏰ Ends in: ${formatEndsIn(draw.endTimestamp)}\n\n` +
+    `Tap below to buy a ticket 👇`
+  );
+}
+
+export function formatCommunityDrawList(draws: CommunityDraw[]): string {
+  if (draws.length === 0) {
+    return "No open community draws right now. Create one with `/createdraw`.";
+  }
+  let msg = "🎟️ *Open Community Draws*\n";
+  for (const d of draws) {
+    const id = d.onChainId !== null ? d.onChainId : d.id;
+    msg +=
+      `\n*${d.title}* — Draw #${id}\n` +
+      `🏆 ${d.prizeAmount} INIT · 🎫 ${d.ticketPrice} INIT · ` +
+      `${d.ticketsSold}/${d.maxTickets} · ends ${formatEndsIn(d.endTimestamp)}`;
+  }
+  return msg;
 }
