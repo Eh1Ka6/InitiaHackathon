@@ -60,7 +60,7 @@ A Telegram Mini App where players challenge each other to a Stack game with real
 ### Live Deployment (Initia appchain `weezdraw-1`)
 
 - **Cosmos chain id**: `weezdraw-1`
-- **EVM chain id**: `263545841876990` (`0xefd2aa588ffe`)
+- **EVM chain id**: `263688080101374` (`0xefd2aa588ffe`)
 - **RPC**: `https://d65eejblzmppfzu2a4a8u9nu.138.201.153.194.sslip.io`
 - **Deployer**: `0xE65460ae5DF23f0Ea2c88590f7b16F4703843898`
 
