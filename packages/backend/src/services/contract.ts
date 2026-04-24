@@ -4,6 +4,7 @@ import { config } from "../config";
 // packages/contracts/artifacts/contracts/core/DrawHub.sol/DrawHub.json
 import DRAWHUB_ABI from "../abi/DrawHub.json";
 import RANDOMNESS_ADAPTER_ABI from "../abi/RandomnessAdapter.json";
+import COMMUNITY_DRAWHUB_ABI from "../abi/CommunityDrawHub.json";
 
 const WAGER_ABI = [
   "function createCompetition(bytes calldata params) external returns (uint256)",
@@ -107,4 +108,28 @@ export function getRandomnessAdapterContract() {
   );
 }
 
-export { ESCROW_ABI, DRAWHUB_ABI, RANDOMNESS_ADAPTER_ABI, getProvider };
+/* ---------- CommunityDrawHub ---------- */
+
+export function getCommunityDrawHubContract() {
+  if (!config.COMMUNITY_DRAWHUB_ADDRESS) {
+    throw new Error("COMMUNITY_DRAWHUB_ADDRESS env var not set");
+  }
+  return new ethers.Contract(
+    config.COMMUNITY_DRAWHUB_ADDRESS,
+    COMMUNITY_DRAWHUB_ABI as any,
+    getWallet()
+  );
+}
+
+export function getCommunityDrawHubReadOnly() {
+  if (!config.COMMUNITY_DRAWHUB_ADDRESS) {
+    throw new Error("COMMUNITY_DRAWHUB_ADDRESS env var not set");
+  }
+  return new ethers.Contract(
+    config.COMMUNITY_DRAWHUB_ADDRESS,
+    COMMUNITY_DRAWHUB_ABI as any,
+    getProvider()
+  );
+}
+
+export { ESCROW_ABI, DRAWHUB_ABI, RANDOMNESS_ADAPTER_ABI, COMMUNITY_DRAWHUB_ABI, getProvider };

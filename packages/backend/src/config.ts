@@ -14,5 +14,8 @@ export const config = {
   // Draw-related environment vars
   DRAWHUB_ADDRESS: process.env.DRAWHUB_ADDRESS || "",
   RANDOMNESS_ADAPTER_ADDRESS: process.env.RANDOMNESS_ADAPTER_ADDRESS || "",
+  COMMUNITY_DRAWHUB_ADDRESS:
+    process.env.COMMUNITY_DRAWHUB_ADDRESS ||
+    "0x5359dB33CF615eEdd738a7d72E8104de050F6B7d",
   ADMIN_TOKEN: process.env.ADMIN_TOKEN || "",
 };
