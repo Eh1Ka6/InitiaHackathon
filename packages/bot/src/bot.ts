@@ -9,6 +9,7 @@ import { profileCommand } from "./commands/profile";
 import { balanceCommand } from "./commands/balance";
 import { createDrawCommand } from "./commands/createdraw";
 import { drawsCommand } from "./commands/draws";
+import { wagerCommand } from "./commands/wager";
 
 // Callbacks
 import { buyTicketCallback } from "./callbacks/buyTicket";
@@ -40,6 +41,7 @@ bot.command("profile", profileCommand);
 bot.command("balance", balanceCommand);
 bot.command("createdraw", createDrawCommand);
 bot.command("draws", drawsCommand);
+bot.command("wager", wagerCommand);
 
 // Callbacks
 bot.callbackQuery(/^buy_ticket:\d+$/, buyTicketCallback);
