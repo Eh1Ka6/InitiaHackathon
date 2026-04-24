@@ -10,6 +10,7 @@ export async function helpCommand(ctx: CommandContext<Context>) {
       `Play the Stack game, buy a ticket, and win real crypto.\n\n` +
       `*Commands:*\n` +
       `/play — Open Cash Game\n` +
+      `/wager @friend 50 — Challenge someone to a 1v1 Stack wager\n` +
       `/profile — Your profile & tickets\n` +
       `/balance — Check your balance\n` +
       `/draws — Browse open community draws\n` +
