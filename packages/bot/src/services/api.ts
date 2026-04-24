@@ -13,11 +13,13 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, {
-    headers: { "Content-Type": "application/json" },
-    ...options,
-  });
+async function request<T>(path: string, options?: RequestInit & { admin?: boolean }): Promise<T> {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (options?.admin && config.ADMIN_TOKEN) {
+    headers["x-admin-token"] = config.ADMIN_TOKEN;
+  }
+  const { admin: _omit, ...rest } = options || {};
+  const res = await fetch(`${BASE}${path}`, { headers, ...rest });
   if (!res.ok) {
     const body: any = await res.json().catch(() => ({}));
     throw new ApiError(body.error || `API error: ${res.status}`, res.status, body.code);
@@ -85,6 +87,7 @@ export const api = {
     return request<CommunityDraw>("/community-draws", {
       method: "POST",
       body: JSON.stringify(data),
+      admin: true,
     });
   },
 

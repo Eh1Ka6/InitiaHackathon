@@ -25,6 +25,21 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return res.json();
 }
 
+// --- Community-draw type (matches backend response) ---
+
+export interface CommunityDraw {
+  id: number;
+  onChainId: number;
+  status: "OPEN" | "SETTLED" | "CANCELLED";
+  title: string;
+  ticketPrice: string;       // wei
+  maxTickets: number;
+  ticketsSold: number;
+  winnerCount: number;
+  endTimestamp: number;      // unix seconds
+  prizeAmount?: string;      // wei
+}
+
 // --- Draw types ---
 
 export type DrawStatus =
@@ -148,6 +163,28 @@ export const api = {
       method: "PATCH",
       body: JSON.stringify({ walletAddress }),
     });
+  },
+
+  // --- Community-draw endpoints ---
+
+  async getActiveCommunityDraws(limit = 10): Promise<CommunityDraw[]> {
+    try {
+      return await request<CommunityDraw[]>(
+        `/community-draws?status=OPEN&limit=${limit}&orderBy=endTimestamp`
+      );
+    } catch (err) {
+      console.warn("[api.getActiveCommunityDraws] failed:", err);
+      return [];
+    }
+  },
+
+  async getCommunityDraw(id: string | number): Promise<CommunityDraw | null> {
+    try {
+      return await request<CommunityDraw>(`/community-draws/${id}`);
+    } catch (err) {
+      console.warn("[api.getCommunityDraw] failed:", err);
+      return null;
+    }
   },
 
   // --- Draw endpoints ---

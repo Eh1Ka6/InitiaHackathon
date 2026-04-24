@@ -1,7 +1,35 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { api, type Draw } from "../services/api";
+import { api, type Draw, type CommunityDraw } from "../services/api";
+
+// Adapt a backend CommunityDraw to the Draw shape DrawCard already knows how
+// to render. ticketsSold is mapped to a synthetic participants array so the
+// existing progress-bar math (participants.length / maxParticipants) works.
+function communityToDraw(cd: CommunityDraw): Draw {
+  return {
+    id: String(cd.onChainId),
+    status: cd.status === "OPEN" ? "OPEN" : "SETTLED",
+    entryFeeInit: (() => {
+      try {
+        // ticketPrice is wei; show short-form INIT value
+        const wei = BigInt(cd.ticketPrice || "0");
+        const whole = Number(wei / 10n ** 18n);
+        return String(whole);
+      } catch {
+        return "?";
+      }
+    })(),
+    deadline: cd.endTimestamp * 1000,
+    multiplierConfigId: 0,
+    participants: Array.from({ length: cd.ticketsSold }, () => ({
+      walletAddress: "",
+      homeChainId: "interwoven-1",
+    })),
+    maxParticipants: cd.maxTickets,
+    createdAt: Date.now(),
+  };
+}
 
 function fmtCountdown(ms: number): string {
   if (ms <= 0) return "closed";
@@ -160,10 +188,17 @@ export default function DrawLobby() {
 
   useEffect(() => {
     let alive = true;
-    api
-      .getActiveDraws()
-      .then((d) => {
-        if (alive) setDraws(d);
+    // Fetch both community draws (primary) and protocol draws in parallel,
+    // merge into one list. Community draws come first so /draws launched
+    // from the bot shows user-created ones prominently.
+    Promise.all([
+      api.getActiveCommunityDraws(10).catch(() => []),
+      api.getActiveDraws().catch(() => [] as Draw[]),
+    ])
+      .then(([community, protocol]) => {
+        if (!alive) return;
+        const merged = [...community.map(communityToDraw), ...protocol];
+        setDraws(merged);
       })
       .catch((e) => alive && setError(String(e?.message || e)));
     return () => {
