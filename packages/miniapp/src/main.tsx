@@ -10,6 +10,7 @@ import {
 } from "@initia/interwovenkit-react";
 import { InterwovenKitProvider } from "./lib/interwovenkit";
 import App from "./App";
+import ErrorBoundary from "./components/ErrorBoundary";
 import "./styles/globals.css";
 
 // Cosmos chain-id for the weezdraw appchain. The EVM chain-id
@@ -77,10 +78,20 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           customChain={weezdrawChain}
           enableAutoSign={true}
           theme="dark"
+          registryUrl="https://registry.testnet.initia.xyz"
+          routerApiUrl="https://router-api.initiation-2.initia.xyz"
+          glyphUrl="https://glyph.initiation-2.initia.xyz"
+          dexUrl="https://dex-api.initiation-2.initia.xyz"
+          vipUrl="https://vip-api.testnet.initia.xyz"
+          minityUrl="https://portfolio-api.minity.xyz"
+          usernamesModuleAddress="0x42cd8467b1c86e59bf319e5664a09b6b5840bb3fac64f5ce690b5041c530565a"
+          lockStakeModuleAddress="0x81c3ea419d2fd3a27971021d9dd3cc708def05e5d6a09d39b2f1f9ba18312264"
         >
           <InterwovenKitProvider>
             <BrowserRouter>
-              <App />
+              <ErrorBoundary>
+                <App />
+              </ErrorBoundary>
             </BrowserRouter>
           </InterwovenKitProvider>
         </RealInterwovenKitProvider>
